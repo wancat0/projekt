@@ -1,0 +1,127 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="pl" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="navbar(isWorkStarted)" th:remove="tag">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Praca</a>
+        <button aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+                data-target="#navbarText" data-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item pr-2" id="start" th:style="${isWorkStarted ? 'display: none' : ''}">
+                    <button class="btn btn-primary" th:onclick="start()" type="button">Start</button>
+                </li>
+                <li class="nav-item" id="stop" th:style="${!isWorkStarted ? 'display: none' : ''}">
+                    <button class="btn btn-primary" th:onclick="stop()" type="button">Stop</button>
+                </li>
+                <li class="nav-item" id="clock-container" th:style="${!isWorkStarted ? 'display: none' : ''}">
+                    <span class="nav-link" id="clock"></span>
+                </li>
+                <li>
+                    <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" id="button-hours"
+                            type="button">
+                        Godziny
+                    </button>
+                    <!-- Modal -->
+                    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal"
+                         role="dialog" tabindex="-1">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Przepracowane godziny</h5>
+                                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" id="modal-body">
+                                    ...
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Zamknij</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <span class="navbar-text" th:text="${name + ' ' + surname}">A A</span>
+        </div>
+    </nav>
+    <script>
+        function fillUserData(data) {
+            var html = '<table class="table table-striped">';
+            html += '<tr>';
+            var flag = 0;
+            $.each(data[0], function (index, value) {
+                html += '<th>' + index + '</th>';
+            });
+            html += '</tr>';
+            $.each(data, function (index, value) {
+                html += '<tr>';
+                $.each(value, function (index2, value2) {
+                    var notNullValue = value2 == null ? ' ' : value2
+                    html += '<td>' + notNullValue + '</td>';
+                });
+                html += '<tr>';
+            });
+            html += '</table>';
+            $('#modal-body').html(html);
+        }
+
+        $('#button-hours').click(function () {
+            fetch('http://localhost:8080/user/calendar')
+                .then(response => response.json())
+                .then(data => fillUserData(data));
+
+        });
+
+
+        $(document).ready(function () {
+            setInterval('updateClock()', 1000);
+        });
+
+        function start() {
+            fetch('http://localhost:8080/user/work-start')
+            $('#start').hide();
+            $('#stop').show();
+            $("#clock").html(secondsToHms(0));
+            $('#clock-container').show();
+        }
+
+        function stop() {
+            fetch('http://localhost:8080/user/work-end')
+            $('#stop').hide();
+            $('#start').show();
+            $('#clock-container').hide();
+        }
+
+        function calculateTime(date) {
+            var currentTime = new Date()
+            var currentTimeString = currentTime.getTime() - date.getTime();
+            $("#clock").html(secondsToHms(Math.round(currentTimeString / (1000))));
+        }
+
+        function updateClock() {
+            if ($('#stop').is(":visible")) {
+                fetch('http://localhost:8080/user/work-start-date')
+                    .then(response => response.json())
+                    .then(data => calculateTime(new Date(data)));
+            }
+        }
+
+        function secondsToHms(d) {
+            d = Number(d);
+            var h = Math.floor(d / 3600);
+            var m = Math.floor(d % 3600 / 60);
+            var s = Math.floor(d % 3600 % 60);
+
+            var hDisplay = h + " - ";
+            var mDisplay = m + " - ";
+            var sDisplay = s
+            return hDisplay + mDisplay + sDisplay;
+        }
+    </script>
+</div>
+</html>
