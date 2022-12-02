@@ -22,6 +22,10 @@ public class Calendar {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToOne
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
+
     private LocalDate date;
     private LocalDateTime startDate;
 
@@ -30,9 +34,10 @@ public class Calendar {
     public Calendar() {
     }
 
-    public Calendar(User user, LocalDateTime startDate) {
+    public Calendar(User user, LocalDateTime startDate, Shop shop) {
         this.user = user;
         this.startDate = startDate;
         this.date = startDate.toLocalDate();
+        this.shop = shop;
     }
 }

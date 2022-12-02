@@ -28,10 +28,6 @@ public class CalendarController {
         userService.endCurrentWorkDate(user.getId());
     }
 
-    @GetMapping("/user/work-start")
-    public LocalDateTime starWork(@AuthenticationPrincipal User user) {
-        return userService.createNewCalendar(user.getId());
-    }
 
     @GetMapping("/user/calendar")
     public Collection<CalendarDto> getCalendar(@AuthenticationPrincipal User user) {

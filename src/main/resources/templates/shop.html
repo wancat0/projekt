@@ -25,12 +25,12 @@
     <h1>
         <span>Nazwa:</span>
         <span th:text="${shop.name}"></span>
+        <a class="btn btn-outline-primary" th:href="@{${shop.id} + '/exit'}">Zakończ pracę na obiekcie</a>
     </h1>
     <h2>
         <span>Adres:</span>
         <span th:text="${shop.address.street + ' ' + shop.address.city + ' ' + shop.address.postalCode}"></span>
     </h2>
-    </p>
     <h3> Magazyn sklepu</h3>
     <table class="table">
         <thead>
@@ -111,6 +111,31 @@
             </tr>
             </tbody>
         </table>
+        <h3>Archiwum:</h3>
+        <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" id="button-hours"
+                type="button" th:onclick="'openArchive('+|${shop.id}|+')'">
+            Zobacz archiwum
+        </button>
+        <!-- Modal -->
+        <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal"
+             role="dialog" tabindex="-1">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Zobacz archiwum</h5>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Zamknij</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </div>
 </body>
@@ -130,5 +155,37 @@
             window.location.reload();
         })
     }
+
+    function fillUserData(data) {
+        var html = '<table class="table table-striped">';
+        html += '<tr>';
+        var flag = 0;
+        $.each(data[0], function (index, value) {
+            html += '<th>' + index + '</th>';
+        });
+        html += '</tr>';
+        $.each(data, function (index, value) {
+            html += '<tr>';
+            $.each(value, function (index2, value2) {
+                var notNullValue = value2 == null ? ' ' : value2
+                html += '<td>' + notNullValue + '</td>';
+            });
+            html += '<tr>';
+        });
+        html += '</table>';
+        $('#modal-body').html(html);
+    }
+
+    function openArchive(shopId) {
+        fetch('http://localhost:8080/shops/' + shopId + "/comments")
+            .then(response => response.json())
+            .then(data => fillUserData(data));
+    }
+
+    /*$('#button-hours').click(function (shopId) {
+        fetch('http://localhost:8080/shops/' + shopId + "/comments")
+            .then(response => response.json())
+            .then(data => fillUserData(data));
+    });*/
 </script>
 </html>

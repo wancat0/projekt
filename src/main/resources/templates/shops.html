@@ -30,13 +30,40 @@
             <th scope="col">Akcja</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody th:if="${shops.size > 0}">
         <tr th:each="shop, stat : ${shops}">
             <td th:text="${stat.count}">1</td>
             <td th:text="${shop.name}">John</td>
             <td th:text="${shop.address.street + ' ' + shop.address.city + ' ' + shop.address.postalCode}">Doe</td>
             <td><a class="btn btn-outline-primary" th:href="${'/shops/' + shop.id}">Wejdź</a></td>
         </tr>
+        </tbody>
+        <tbody th:unless="${shops.size > 0}">
+               <td>brak</td>
+        </tbody>
+    </table>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Nazwa</th>
+            <th scope="col">Miasto</th>
+            <th scope="col">Ulica</th>
+            <th scope="col">Kod pocztowy</th>
+            <th scope="col">Akcja</th>
+        </tr>
+        </thead>
+        <tbody>
+        <form th:action="@{/shops}" th:object="${newShop}" method="post">
+            <tr>
+                <td><input aria-describedby="emailHelp" class="form-control" th:field="*{name}" type="text"></td>
+                <td><input aria-describedby="emailHelp" class="form-control" th:field="*{address.city}" type="text"></td>
+                <td><input aria-describedby="emailHelp" class="form-control" th:field="*{address.street}" type="text"></td>
+                <td><input aria-describedby="emailHelp" class="form-control" th:field="*{address.postalCode}" type="text"></td>
+                <td>
+                    <button class="btn btn-outline-primary" type="submit">Dodaj</button>
+                </td>
+            </tr>
+        </form>
         </tbody>
     </table>
 </div>

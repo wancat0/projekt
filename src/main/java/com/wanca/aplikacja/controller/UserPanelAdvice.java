@@ -19,6 +19,7 @@ public class UserPanelAdvice {
     
     @ModelAttribute
     public void addAttributes(Model model, @AuthenticationPrincipal User user) {
+        //TODO
         model.addAttribute("name", user.getName());
         model.addAttribute("surname", user.getSurname());
         boolean isWorkStarted = userService.getCurrentStartDate(LocalDate.now(), user.getId()).isPresent();

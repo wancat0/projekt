@@ -10,19 +10,10 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item pr-2" id="start" th:style="${isWorkStarted ? 'display: none' : ''}">
-                    <button class="btn btn-primary" th:onclick="start()" type="button">Start</button>
-                </li>
-                <li class="nav-item" id="stop" th:style="${!isWorkStarted ? 'display: none' : ''}">
-                    <button class="btn btn-primary" th:onclick="stop()" type="button">Stop</button>
-                </li>
-                <li class="nav-item" id="clock-container" th:style="${!isWorkStarted ? 'display: none' : ''}">
-                    <span class="nav-link" id="clock"></span>
-                </li>
                 <li>
                     <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" id="button-hours"
                             type="button">
-                        Godziny
+                        Przepracowane godziny
                     </button>
                     <!-- Modal -->
                     <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal"
@@ -104,7 +95,7 @@
         }
 
         function updateClock() {
-            if ($('#stop').is(":visible")) {
+            if ($('#clock').is(":visible")) {
                 fetch('http://localhost:8080/user/work-start-date')
                     .then(response => response.json())
                     .then(data => calculateTime(new Date(data)));

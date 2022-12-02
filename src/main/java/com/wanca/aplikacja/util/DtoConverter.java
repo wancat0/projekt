@@ -8,6 +8,8 @@ import com.wanca.aplikacja.entity.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -28,7 +30,7 @@ public class DtoConverter {
     public static ShopDto convertShop(Shop shop, Collection<ProductDto> products) {
         var addressDto = DtoConverter.convertAddress(shop.getAddress());
         Collection<EmployeeDto> employees = shop.getEmployee().stream().map(DtoConverter::convertEmployee).toList();
-        Collection<CommentDto> comments = shop.getComments().stream().map(DtoConverter::convertComment).toList();
+        Collection<CommentDto> comments = shop.getComments().stream().filter(comment -> comment.getDate().toLocalDate().isEqual(LocalDate.now())).map(DtoConverter::convertComment).toList();
         return new ShopDto(shop.getId(), shop.getName(), addressDto, employees, products, comments);
     }
 }

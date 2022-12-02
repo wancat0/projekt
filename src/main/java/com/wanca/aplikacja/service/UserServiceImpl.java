@@ -6,6 +6,7 @@ import com.wanca.aplikacja.entity.Calendar;
 import com.wanca.aplikacja.entity.User;
 import com.wanca.aplikacja.exceptions.UserAlreadyExistsException;
 import com.wanca.aplikacja.exceptions.UserNotFoundException;
+import com.wanca.aplikacja.repository.ShopRepository;
 import com.wanca.aplikacja.repository.UserCalendarRepository;
 import com.wanca.aplikacja.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,8 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    private final ShopRepository shopRepository;
     private final UserCalendarRepository userCalendarRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -48,10 +51,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public LocalDateTime createNewCalendar(long userId) {
+    public LocalDateTime createNewCalendar(long userId, long shopId) {
         LocalDateTime now = LocalDateTime.now();
+
         return userRepository.findById(userId)
-                .map(u -> new Calendar(u, now))
+                .map(u -> new Calendar(u, now, shopRepository.getReferenceById(shopId)))
                 .map(userCalendarRepository::save)
                 .map(Calendar::getStartDate)
                 .orElseThrow(() -> new UserNotFoundException(userId));
@@ -71,7 +75,7 @@ public class UserServiceImpl implements UserService {
     public Collection<CalendarDto> getUserCalendars(long userId) {
         return userCalendarRepository.findCalendarsByUser_Id(userId)
                 .stream()
-                .map(c -> new CalendarDto(c.getDate(), c.getStartDate(), c.getEndDate()))
+                .map(c -> new CalendarDto(c.getDate(), c.getStartDate(), c.getEndDate(), c.getShop().getName()))
                 .sorted(Comparator.comparing(CalendarDto::getStartDate))
                 .toList();
     }

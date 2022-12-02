@@ -17,4 +17,5 @@ public class CalendarDto {
     @JsonProperty("koniec")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     private final LocalDateTime endDate;
+    private final String name;
 }

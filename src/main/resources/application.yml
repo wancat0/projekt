@@ -15,4 +15,4 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/db_aplikacja
     username: root
-    password: 1
+    password: admin

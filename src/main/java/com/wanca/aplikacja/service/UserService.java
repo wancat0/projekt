@@ -13,7 +13,7 @@ public interface UserService {
 
     Optional<LocalDateTime> getCurrentStartDate(LocalDate date, long userId);
 
-    LocalDateTime createNewCalendar(long userId);
+    LocalDateTime createNewCalendar(long userId, long shopId);
 
     void endCurrentWorkDate(long userId);
 
