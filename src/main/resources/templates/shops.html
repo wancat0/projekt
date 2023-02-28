@@ -20,11 +20,24 @@
 <body>
 <div th:replace="'fields' :: navbar(isWorkStarted = ${isWorkStarted})"></div>
 <div class="container">
-    <h3>Obiekty</h3>
+
+    <div class="row pt-3 pb-3">
+
+
+        <div class="col-2">
+            <h3>Obiekty</h3>
+        </div>
+        <div class="offset-7 col-2">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#dodajModal">
+                Dodaj nowy obiekt
+            </button>
+        </div>
+    </div>
     <table class="table">
         <thead>
         <tr>
             <th scope="col">#</th>
+            <th scope="col">Zdjęcie</th>
             <th scope="col">Nazwa</th>
             <th scope="col">Adres</th>
             <th scope="col">Akcja</th>
@@ -32,41 +45,67 @@
         </thead>
         <tbody th:if="${shops.size > 0}">
         <tr th:each="shop, stat : ${shops}">
-            <td th:text="${stat.count}">1</td>
-            <td th:text="${shop.name}">John</td>
-            <td th:text="${shop.address.street + ' ' + shop.address.city + ' ' + shop.address.postalCode}">Doe</td>
-            <td><a class="btn btn-outline-primary" th:href="${'/shops/' + shop.id}">Wejdź</a></td>
+            <td class="td-center" th:text="${stat.count}">1</td>
+            <td><img src="/images/home.png" alt="Image..."/></td>
+            <td class="td-center">John</td>
+            <td class="td-center"
+                th:text="${shop.address.street + ' ' + shop.address.city + ' ' + shop.address.postalCode}">Doe
+            </td>
+            <td class="td-center"><a class="btn btn-outline-primary" th:href="${'/shops/' + shop.id}">Wejdź</a></td>
         </tr>
         </tbody>
         <tbody th:unless="${shops.size > 0}">
-               <td>brak</td>
+        <td>brak</td>
         </tbody>
     </table>
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Nazwa</th>
-            <th scope="col">Miasto</th>
-            <th scope="col">Ulica</th>
-            <th scope="col">Kod pocztowy</th>
-            <th scope="col">Akcja</th>
-        </tr>
-        </thead>
-        <tbody>
+
+    <div class="modal" id="dodajModal" tabindex="-1" role="dialog">
         <form th:action="@{/shops}" th:object="${newShop}" method="post">
-            <tr>
-                <td><input aria-describedby="emailHelp" class="form-control" th:field="*{name}" type="text"></td>
-                <td><input aria-describedby="emailHelp" class="form-control" th:field="*{address.city}" type="text"></td>
-                <td><input aria-describedby="emailHelp" class="form-control" th:field="*{address.street}" type="text"></td>
-                <td><input aria-describedby="emailHelp" class="form-control" th:field="*{address.postalCode}" type="text"></td>
-                <td>
-                    <button class="btn btn-outline-primary" type="submit">Dodaj</button>
-                </td>
-            </tr>
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Dodaj nowy obiekt</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Nazwa sklepu</label>
+                            <input type="text" class="form-control" th:field="*{name}" placeholder="Biedronka">
+                        </div>
+                        <div class="form-group">
+                            <label for="address.street">Ulica</label>
+                            <input type="text" class="form-control" th:field="*{address.street}"
+                                   placeholder="Krakowska 1">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-8">
+                                <label for="address.city">Miejscowość</label>
+                                <input type="text" class="form-control" th:field="*{address.city}"
+                                       placeholder="Rzeszów">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="address.postalCode">Kod pocztowy</label>
+                                <input type="text" class="form-control" th:field="*{address.postalCode}"
+                                       placeholder="35-125">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Dodaj</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                    </div>
+                </div>
+            </div>
         </form>
-        </tbody>
-    </table>
+    </div>
 </div>
 
 </body>
+<style>
+    .td-center {
+        vertical-align: middle !important;
+    }
+</style>
 </html>

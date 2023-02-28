@@ -3,41 +3,48 @@
 
 <div th:fragment="navbar(isWorkStarted)" th:remove="tag">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">Praca</a>
-        <button aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
-                data-target="#navbarText" data-toggle="collapse" type="button">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarText">
-            <ul class="navbar-nav mr-auto">
-                <li>
-                    <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" id="button-hours"
-                            type="button">
-                        Przepracowane godziny
-                    </button>
-                    <!-- Modal -->
-                    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal"
-                         role="dialog" tabindex="-1">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Przepracowane godziny</h5>
-                                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body" id="modal-body">
-                                    ...
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Zamknij</button>
+        <div class="container">
+            <a class="navbar-brand" href="/">Praca</a>
+            <button aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation"
+                    class="navbar-toggler"
+                    data-target="#navbarText" data-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav mr-auto">
+                    <li>
+                        <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal"
+                                id="button-hours"
+                                type="button">
+                            Przepracowane godziny
+                        </button>
+                        <!-- Modal -->
+                        <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade"
+                             id="exampleModal"
+                             role="dialog" tabindex="-1">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Przepracowane godziny</h5>
+                                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body" id="modal-body">
+                                        ...
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                                            Zamknij
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </li>
-            </ul>
-            <span class="navbar-text" th:text="${name + ' ' + surname}">A A</span>
+                    </li>
+                </ul>
+                <span class="navbar-text" th:text="${name + ' ' + surname}">A A</span>
+            </div>
         </div>
     </nav>
     <script>

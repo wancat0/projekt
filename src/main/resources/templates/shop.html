@@ -20,12 +20,9 @@
 <body>
 <div th:replace="'fields' :: navbar(isWorkStarted = ${isWorkStarted})"></div>
 <div class="container">
-
-
     <h1>
         <span>Nazwa:</span>
         <span th:text="${shop.name}"></span>
-        <a class="btn btn-outline-primary" th:href="@{${shop.id} + '/exit'}">Zakończ pracę na obiekcie</a>
     </h1>
     <h2>
         <span>Adres:</span>
@@ -116,6 +113,7 @@
                 type="button" th:onclick="'openArchive('+|${shop.id}|+')'">
             Zobacz archiwum
         </button>
+       <tr> <a class="btn btn-outline-primary" th:href="@{${shop.id} + '/exit'}">Zakończ pracę na obiekcie</a> </tr>
         <!-- Modal -->
         <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal"
              role="dialog" tabindex="-1">

@@ -1,5 +1,6 @@
 package com.wanca.aplikacja.controller;
 
+import com.itextpdf.text.DocumentException;
 import com.wanca.aplikacja.dto.CommentDto;
 import com.wanca.aplikacja.dto.SimpleShopDto;
 import com.wanca.aplikacja.exceptions.ShopNotFoundException;
@@ -8,11 +9,17 @@ import com.wanca.aplikacja.service.ProductService;
 import com.wanca.aplikacja.service.ShopService;
 import com.wanca.aplikacja.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -52,7 +59,7 @@ public class ShopController {
         return "shops";
     }
 
-    @PostMapping("/shops")
+    @PostMapping( "/shops")
     public String shop(@ModelAttribute SimpleShopDto simpleShopDto) {
         shopService.createShop(simpleShopDto);
         return "redirect:/shops";
@@ -89,5 +96,22 @@ public class ShopController {
     @GetMapping("/shops/{shopId}/comments")
     public List<CommentDto> comments(@PathVariable long shopId) {
         return shopService.getComments(shopId);
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/shops/{shopId}/comments/{commentId}")
+    public ResponseEntity<Resource> generatePdf(@PathVariable long shopId, @PathVariable long commentId) throws DocumentException, IOException, URISyntaxException {
+        var comment = shopService.getComment(commentId);
+        var pdfFile = shopService.generatePdfFromComment(comment);
+        HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=komentarz-" + comment.getDate() + ".pdf");
+        header.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        header.add("Pragma", "no-cache");
+        header.add("Expires", "0");
+        return ResponseEntity.ok()
+                .headers(header)
+                .contentLength(pdfFile.contentLength())
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdfFile);
     }
 }
