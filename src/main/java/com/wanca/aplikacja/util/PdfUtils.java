@@ -7,6 +7,7 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.wanca.aplikacja.dto.CommentDto;
 import com.wanca.aplikacja.entity.Comment;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -16,12 +17,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.stream.Stream;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PdfUtils {
 
-    public static ByteArrayResource generatePdfFromComment(Comment comment) throws IOException, DocumentException {
+    public static ByteArrayResource generatePdfFromComment(List<CommentDto> comments) throws IOException, DocumentException {
         Document document = new Document();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PdfWriter.getInstance(document, out);
@@ -29,13 +31,14 @@ public class PdfUtils {
 
         PdfPTable table = new PdfPTable(2);
         addTableHeader(table);
-        addRows(table, comment.getDate(), comment.getText());
+        comments.forEach(c -> addRows(table, c.getDate(), c.getText()));
         document.add(table);
 
         document.close();
         out.close();
         return new ByteArrayResource(out.toByteArray());
     }
+
     private static void addTableHeader(PdfPTable table) {
         Stream.of("Data", "Komentarz")
                 .forEach(columnTitle -> {

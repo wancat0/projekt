@@ -19,13 +19,5 @@ public interface ShopService {
 
     Collection<ShopDto> getShops();
 
-    void addComment(long shopId, CommentDto commentDto);
-
     void createShop(SimpleShopDto simpleShopDto);
-
-    List<CommentDto> getComments(long shopId);
-
-    Comment getComment(long commentId);
-
-    ByteArrayResource generatePdfFromComment(Comment comment) throws IOException, DocumentException, URISyntaxException;
 }

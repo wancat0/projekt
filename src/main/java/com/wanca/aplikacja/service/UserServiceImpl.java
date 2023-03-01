@@ -12,6 +12,7 @@ import com.wanca.aplikacja.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
+    @Transactional
     public void registerUser(UserDto userDto) throws UserAlreadyExistsException {
 
         boolean exists = userRepository.existsUserByEmail(userDto.getEmail());
@@ -45,12 +47,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<LocalDateTime> getCurrentStartDate(LocalDate date, long userId) {
         return userCalendarRepository.findFirstByDateAndEndDateIsNullOrderByStartDateDesc(date)
                 .map(Calendar::getStartDate);
     }
 
     @Override
+    @Transactional
     public LocalDateTime createNewCalendar(long userId, long shopId) {
         LocalDateTime now = LocalDateTime.now();
 
@@ -62,6 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void endCurrentWorkDate(long userId) {
         userCalendarRepository.findFirstByUser_IdAndDateAndEndDateIsNullOrderByStartDateDesc(userId, LocalDate.now())
                 .ifPresent(c -> {
@@ -72,6 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Collection<CalendarDto> getUserCalendars(long userId) {
         return userCalendarRepository.findCalendarsByUser_Id(userId)
                 .stream()

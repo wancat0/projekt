@@ -13,15 +13,15 @@
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav mr-auto">
                     <li>
-                        <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal"
+                        <button class="btn btn-primary" data-target="#calendarModal" data-toggle="modal"
                                 id="button-hours"
                                 type="button">
                             Przepracowane godziny
                         </button>
                         <!-- Modal -->
                         <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade"
-                             id="exampleModal"
-                             role="dialog" tabindex="-1">
+                             id="calendarModal"
+                             role="dialog" tabindex="-1" th:with="calendar=${calendar}">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -30,8 +30,23 @@
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
-                                    <div class="modal-body" id="modal-body">
-                                        ...
+                                    <div class="modal-body pre-scrollable" id="modal-body" style="max-height: 500px">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">Sklep</th>
+                                                <th scope="col">Początek</th>
+                                                <th scope="col">Koniec</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="row, stat : ${calendar}">
+                                                <td th:text="${row.name}">John</td>
+                                                <td th:text="${#temporals.format(row.startDate, 'dd-MM-yyyy hh:mm')}">John</td>
+                                                <td th:text="${#temporals.format(row.endDate, 'dd-MM-yyyy hh:mm')}">John</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                     <div class="modal-footer">
                                         <button class="btn btn-secondary" data-dismiss="modal" type="button">
@@ -71,8 +86,7 @@
         $('#button-hours').click(function () {
             fetch('http://localhost:8080/user/calendar')
                 .then(response => response.json())
-                .then(data => fillUserData(data));
-
+                //.then(data => fillUserData(data));
         });
 
 
@@ -111,14 +125,13 @@
 
         function secondsToHms(d) {
             d = Number(d);
-            var h = Math.floor(d / 3600);
-            var m = Math.floor(d % 3600 / 60);
-            var s = Math.floor(d % 3600 % 60);
+            let h = Math.floor(d / 3600);
+            let m = Math.floor(d % 3600 / 60);
+            let s = Math.floor(d % 3600 % 60);
 
-            var hDisplay = h + " - ";
-            var mDisplay = m + " - ";
-            var sDisplay = s
-            return hDisplay + mDisplay + sDisplay;
+            let hDisplay = h + " - ";
+            let mDisplay = m + " - ";
+            return hDisplay + mDisplay + s;
         }
     </script>
 </div>

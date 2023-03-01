@@ -11,9 +11,9 @@ public interface ProductService {
 
     Collection<ProductDto> getShopProducts(long shopId);
 
-    void removeProductFromShop(long productId, long shopId);
+    void removeProductFromShop(long productId, long shopId, int count);
 
-    void addProductToShop(long productId, long shopId);
+    void addProductToShop(long productId, long shopId, int count);
 
     void addProduct(ProductDto productDto);
 

@@ -1,5 +1,6 @@
 package com.wanca.aplikacja.service;
 
+import com.wanca.aplikacja.dto.CommentDto;
 import com.wanca.aplikacja.dto.ProductDto;
 import com.wanca.aplikacja.entity.Product;
 import com.wanca.aplikacja.entity.ShopStore;
@@ -9,7 +10,9 @@ import com.wanca.aplikacja.repository.ShopRepository;
 import com.wanca.aplikacja.repository.ShopStoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Service
@@ -19,8 +22,10 @@ public class ProductServiceImpl implements ProductService {
     private final ShopRepository shopRepository;
     private final ShopStoreRepository shopStoreRepository;
     private final ProductRepository productRepository;
+    private final CommentService commentService;
 
     @Override
+    @Transactional(readOnly = true)
     public Collection<ProductDto> getAllAvailableProductsDetails() {
         return productRepository.findAll()
                 .stream()
@@ -29,6 +34,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Collection<ProductDto> getShopProducts(long shopId) {
         return shopStoreRepository.findByShop_Id(shopId)
                 .stream()
@@ -37,25 +43,29 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void removeProductFromShop(long productId, long shopId) {
+    @Transactional
+    public void removeProductFromShop(long productId, long shopId, int count) {
         var shopStoreProduct = shopStoreRepository.findByShop_IdAndProduct_id(shopId, productId)
                 .orElseThrow(RuntimeException::new);
 
-        if (!shopStoreProduct.isAvailable())
+        if (!shopStoreProduct.isAvailable(count))
             throw new ProductNotAvailableException();
 
-        shopStoreProduct.removeProduct();
-        if (shopStoreProduct.isAvailable())
+        shopStoreProduct.removeProduct(count);
+        if (shopStoreProduct.isAvailable(count))
             shopStoreRepository.save(shopStoreProduct);
         else shopStoreRepository.delete(shopStoreProduct);
+        commentService.addComment(shopId, new CommentDto(null, "Dodano: %d %s".formatted(count, shopStoreProduct.getProduct().getName()), LocalDateTime.now()));
+
     }
 
     @Override
-    public void addProductToShop(long productId, long shopId) {
+    @Transactional
+    public void addProductToShop(long productId, long shopId, int count) {
         var product = productRepository.findById(productId)
                 .orElseThrow(RuntimeException::new);
 
-        if (!product.isAvailable())
+        if (!product.isAvailable(count))
             throw new ProductNotAvailableException();
 
         var shopStoreProduct = shopStoreRepository.findByShop_IdAndProduct_id(shopId, productId)
@@ -66,11 +76,14 @@ public class ProductServiceImpl implements ProductService {
                 });
 
 
-        shopStoreProduct.addProduct();
+        shopStoreProduct.addProduct(count);
         shopStoreRepository.save(shopStoreProduct);
+        commentService.addComment(shopId, new CommentDto(null, "Dodano: %d %s".formatted(count, product.getName()), LocalDateTime.now()));
+
     }
 
     @Override
+    @Transactional
     public void addProduct(ProductDto productDto) {
         Product product = new Product();
         product.setName(productDto.getName());
@@ -79,17 +92,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public void removeProduct(long id) {
         productRepository.deleteById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Product findOne(long id) {
         return productRepository.findById(id)
                 .orElseThrow(ProductNotAvailableException::new);
     }
 
     @Override
+    @Transactional
     public void update(Product product) {
         productRepository.save(product);
     }

@@ -47,7 +47,7 @@
         <tr th:each="shop, stat : ${shops}">
             <td class="td-center" th:text="${stat.count}">1</td>
             <td><img src="/images/home.png" alt="Image..."/></td>
-            <td class="td-center">John</td>
+            <td class="td-center" th:text="${shop.name}">John</td>
             <td class="td-center"
                 th:text="${shop.address.street + ' ' + shop.address.city + ' ' + shop.address.postalCode}">Doe
             </td>

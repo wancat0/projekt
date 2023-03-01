@@ -20,126 +20,213 @@
 <body>
 <div th:replace="'fields' :: navbar(isWorkStarted = ${isWorkStarted})"></div>
 <div class="container">
-    <h1>
-        <span>Nazwa:</span>
-        <span th:text="${shop.name}"></span>
-    </h1>
-    <h2>
-        <span>Adres:</span>
-        <span th:text="${shop.address.street + ' ' + shop.address.city + ' ' + shop.address.postalCode}"></span>
-    </h2>
-    <h3> Magazyn sklepu</h3>
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col" style="width: 10%">#</th>
-            <th scope="col" style="width: 40%">Nazwa</th>
-            <th scope="col" style="width: 40%">Ilość</th>
-            <th scope="col" style="width: 10%">Akcja</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="product,stat : ${shop.products}">
-            <td th:text="${stat.count}">1</td>
-            <td th:text="${product.name}">John</td>
-            <td th:text="${product.count}">John</td>
-            <td>
-                <button class="btn btn-outline-primary" th:onclick="'remove('+|${product.id}, ${shop.id}|+')'">Usuń
-                </button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
 
-    <div class="text-center p-3" th:if="${shop.products.size < 1}">
-        <h3>Brak produktów</h3>
-    </div>
+    <div class="mt-5 mb-5">
 
-    <h3>Do dodania:</h3>
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col" style="width: 10%">#</th>
-            <th scope="col" style="width: 40%">Nazwa</th>
-            <th scope="col" style="width: 40%">Ilość</th>
-            <th scope="col" style="width: 10%">Akcja</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="product, stat : ${availableProducts}">
-            <td th:text="${stat.count}">1</td>
-            <td th:text="${product.name}">John</td>
-            <td th:text="${product.count}">John</td>
-            <td th:if="${product.count > 0}">
-                <button class="btn btn-outline-primary" th:onclick="'add('+|${product.id}, ${shop.id}|+')'">Dodaj
-                </button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <div class="text-center p-3" th:if="${availableProducts.size < 1}">
-        <h3>Brak produktów do dodania</h3>
-    </div>
-    <section id="comment">
-        <form method="post" th:action="${'/shops/' + shop.id+ '/comments'}">
-            <div class="form-floating pb-2">
-                <textarea class="form-control" id="text" name="text" placeholder="Dodaj komentarz"></textarea>
-            </div>
-            <button class="btn btn-outline-primary float-right" type="submit">Dodaj komentarz</button>
-        </form>
-
-        <h3>Komentarze:</h3>
-        <div class="text-center p-3" th:if="${shop.comments.size < 1}">
-            <h3>Brak komentarzy</h3>
-        </div>
-        <table class="table" th:if="${shop.comments.size > 0}">
-            <thead>
-            <tr>
-                <th scope="col" style="width: 10%">#</th>
-                <th scope="col" style="width: 20%">Data</th>
-                <th scope="col" style="width: 70%">Komentarz</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="comment, stat : ${shop.comments}">
-                <td th:text="${stat.count}">1</td>
-                <td th:text="${{comment.date}}">John</td>
-                <td th:text="${comment.text}">John</td>
-            </tr>
-            </tbody>
-        </table>
-        <h3>Archiwum:</h3>
-        <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" id="button-hours"
-                type="button" th:onclick="'openArchive('+|${shop.id}|+')'">
-            Zobacz archiwum
-        </button>
-       <tr> <a class="btn btn-outline-primary" th:href="@{${shop.id} + '/exit'}">Zakończ pracę na obiekcie</a> </tr>
-        <!-- Modal -->
-        <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal"
-             role="dialog" tabindex="-1">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Zobacz archiwum</h5>
-                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                            <span aria-hidden="true">&times;</span>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-2">
+                        <img class="card-img-top" src="/images/home.png" alt="Card image cap">
+                    </div>
+                    <div class="col-6">
+                        <h1 class="card-title" th:text="${shop.name}">Obiekty</h1>
+                        <p class="card-text" th:text="${shop.address.street}">Tutaj znajdziesz sklepy oraz punkty, które
+                            serwisujesz. Przy
+                            rozpoczęciu pracy wybierz odpowiedni obiekt.</p>
+                        <p class="card-text" th:text="${shop.address.city}">Tutaj znajdziesz sklepy oraz punkty, które
+                            serwisujesz. Przy
+                            rozpoczęciu pracy wybierz odpowiedni obiekt.</p>
+                        <p class="card-text" th:text="${shop.address.postalCode}">Tutaj znajdziesz sklepy oraz punkty,
+                            które serwisujesz. Przy
+                            rozpoczęciu pracy wybierz odpowiedni obiekt.</p>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-primary" data-target="#archiveCommentsModal" data-toggle="modal"
+                                id="button-hours" th:data-row="${archiveComments}"
+                                type="button">
+                            Zobacz archiwum
                         </button>
-                    </div>
-                    <div class="modal-body" id="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Zamknij</button>
+
+                        <a class="btn btn-outline-primary mt-5" th:href="${shop.id + '/exit'}">Zakończ pracę na
+                            obiekcie</a>
+
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+
+
+    <!-- Modal -->
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="archiveCommentsModal" th:with="comments=${archiveComments}, shopId=${shop.id}"
+         role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Zobacz archiwum</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pre-scrollable" id="modal-body" style="max-height: 500px">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Komentarz</th>
+                            <th scope="col">Data</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="comment, stat : ${comments}">
+                            <td th:text="${stat.count}">1</td>
+                            <td th:text="${{comment.text}}">John</td>
+                            <td th:text="${comment.date}">John</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" th:href="${'/shops/' + shopId + '/comments/pdf'}" target="_blank" type="button">Pobierz pdf</a>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Zamknij
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-4">
+            <div class="list-group" id="list-tab" role="tablist">
+                <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list"
+                   href="#list-home" role="tab" aria-controls="home">Komentarze</a>
+                <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list"
+                   href="#list-messages" role="tab" aria-controls="messages">Magazyn</a>
+                <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list"
+                   href="#list-settings" role="tab" aria-controls="settings">Do dodania</a>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                    <section id="comment">
+                        <form method="post" th:action="${'/shops/' + shop.id+ '/comments'}">
+                            <div class="form-floating pb-2">
+                                <textarea class="form-control" id="text" name="text" placeholder="Dodaj komentarz"
+                                          required></textarea>
+                            </div>
+                            <button class="btn btn-outline-primary float-right" type="submit">Dodaj komentarz</button>
+                        </form>
+
+                        <h3>Komentarze:</h3>
+                        <div class="text-center p-3" th:if="${shop.comments.size < 1}">
+                            <h3>Brak komentarzy</h3>
+                        </div>
+                        <div class="pre-scrollable" style="max-height: 300px">
+                            <table class="table" th:if="${shop.comments.size > 0}">
+                                <thead>
+                                <tr>
+                                    <th scope="col" style="width: 10%">#</th>
+                                    <th scope="col" style="width: 20%">Data</th>
+                                    <th scope="col" style="width: 70%">Komentarz</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="comment, stat : ${shop.comments}">
+                                    <td th:text="${stat.count}">1</td>
+                                    <td th:text="${{comment.date}}">John</td>
+                                    <td th:text="${comment.text}">John</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </section>
+                </div>
+                <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
+                    <h3> Magazyn sklepu</h3>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="width: 10%">#</th>
+                            <th scope="col" style="width: 30%">Nazwa</th>
+                            <th scope="col" style="width: 30%">Dostępne</th>
+                            <th scope="col" style="width: 20%">Wybierz ilość</th>
+                            <th scope="col" style="width: 10%">Akcja</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="product,stat : ${shop.products}">
+                            <td th:text="${stat.count}">1</td>
+                            <td th:text="${product.name}">John</td>
+                            <td th:text="${product.count}">John</td>
+                            <td>
+                                <select th:id="${'remove-select' + product.id}" class="form-control">
+                                    <th:block th:each="i: ${#numbers.sequence(1, product.count)}">
+                                        <option th:text="${i}"></option>
+                                    </th:block>
+                                </select>
+                            </td>
+                            <td>
+                                <button class="btn btn-outline-primary"
+                                        th:onclick="'remove('+|${product.id}, ${shop.id}|+')'">Usuń
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="text-center p-3" th:if="${shop.products.size < 1}">
+                        <h3>Brak produktów</h3>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">
+                    <h3>Do dodania:</h3>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="width: 10%">#</th>
+                            <th scope="col" style="width: 30%">Nazwa</th>
+                            <th scope="col" style="width: 30%">Dostępne</th>
+                            <th scope="col" style="width: 20%">Wybierz ilość</th>
+                            <th scope="col" style="width: 10%">Akcja</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="product, stat : ${availableProducts}" th:with="count = ${0}">
+                            <td th:text="${stat.count}">1</td>
+                            <td th:text="${product.name}">John</td>
+                            <td th:text="${product.count}">John</td>
+                            <td th:if="${product.count > 0}">
+                                <select th:id="${'add-select' + product.id}" class="form-control">
+                                    <th:block th:each="i: ${#numbers.sequence(1, product.count)}">
+                                        <option th:text="${i}"></option>
+                                    </th:block>
+                                </select>
+                            </td>
+                            <td th:if="${product.count > 0}">
+                                <button class="btn btn-outline-primary"
+                                        th:onclick="'add('+|${product.id}, ${shop.id}|+')'">Dodaj
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center p-3" th:if="${availableProducts.size < 1}">
+                        <h3>Brak produktów do dodania</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 <script>
     function remove(productId, shopId) {
-        fetch('http://localhost:8080/shops/' + shopId + "/products/" + productId, {
+        fetch('http://localhost:8080/shops/' + shopId + "/products/" + productId + "?count=" + $("#remove-select" + productId).val(), {
             method: 'DELETE'
         }).then(() => {
             window.location.reload();
@@ -147,7 +234,7 @@
     }
 
     function add(productId, shopId) {
-        fetch('http://localhost:8080/shops/' + shopId + "/products/" + productId, {
+        fetch('http://localhost:8080/shops/' + shopId + "/products/" + productId + "?count=" + $("#add-select" + productId).val(), {
             method: 'PUT'
         }).then(() => {
             window.location.reload();
@@ -175,15 +262,20 @@
     }
 
     function openArchive(shopId) {
-        fetch('http://localhost:8080/shops/' + shopId + "/comments")
+        fetch('http://localhost:8080/shops/' + shopId + "/comments?archived=true")
             .then(response => response.json())
             .then(data => fillUserData(data));
     }
 
-    /*$('#button-hours').click(function (shopId) {
-        fetch('http://localhost:8080/shops/' + shopId + "/comments")
-            .then(response => response.json())
-            .then(data => fillUserData(data));
-    });*/
+    $(document).ready(function () {
+        $('a[data-toggle="list"]').on('show.bs.tab', function (e) {
+            localStorage.setItem('activeTab', $(e.target).attr('href'));
+        });
+        var activeTab = localStorage.getItem('activeTab');
+        if (activeTab) {
+            $('#list-tab a[href="' + activeTab + '"]').tab('show');
+        }
+    });
+
 </script>
 </html>

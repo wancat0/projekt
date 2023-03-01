@@ -5,6 +5,7 @@ import com.wanca.aplikacja.dto.CommentDto;
 import com.wanca.aplikacja.dto.SimpleShopDto;
 import com.wanca.aplikacja.exceptions.ShopNotFoundException;
 import com.wanca.aplikacja.security.User;
+import com.wanca.aplikacja.service.CommentService;
 import com.wanca.aplikacja.service.ProductService;
 import com.wanca.aplikacja.service.ShopService;
 import com.wanca.aplikacja.service.UserService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class ShopController {
 
     private final ShopService shopService;
     private final ProductService productService;
-
+    private final CommentService commentService;
     private final UserService userService;
 
     @GetMapping("/")
@@ -39,17 +41,14 @@ public class ShopController {
 
     @ResponseBody
     @PutMapping("/shops/{shopId}/products/{productId}")
-    public void addProduct(@PathVariable long shopId, @PathVariable long productId) {
-        productService.addProductToShop(productId, shopId);
-        shopService.addComment(shopId, new CommentDto(null, "Dodano: %d".formatted(productId), LocalDateTime.now()));
+    public void addProduct(@PathVariable long shopId, @PathVariable long productId, @RequestParam int count) {
+        productService.addProductToShop(productId, shopId, count);
     }
 
     @ResponseBody
     @DeleteMapping("/shops/{shopId}/products/{productId}")
-    public void removeProduct(@PathVariable long shopId, @PathVariable long productId) {
-        productService.removeProductFromShop(productId, shopId);
-        shopService.addComment(shopId, new CommentDto(null, "Usunieto: %d".formatted(productId), LocalDateTime.now()));
-
+    public void removeProduct(@PathVariable long shopId, @PathVariable long productId, @RequestParam int count) {
+        productService.removeProductFromShop(productId, shopId, count);
     }
 
     @GetMapping("/shops")
@@ -59,7 +58,7 @@ public class ShopController {
         return "shops";
     }
 
-    @PostMapping( "/shops")
+    @PostMapping("/shops")
     public String shop(@ModelAttribute SimpleShopDto simpleShopDto) {
         shopService.createShop(simpleShopDto);
         return "redirect:/shops";
@@ -70,6 +69,7 @@ public class ShopController {
     public String shop(@PathVariable long shopId, Model model) {
         model.addAttribute("shop", shopService.getShopById(shopId)
                 .orElseThrow(ShopNotFoundException::new));
+        model.addAttribute("archiveComments", commentService.getComments(shopId, true));
         model.addAttribute("availableProducts", productService.getAllAvailableProductsDetails());
         userService.createNewCalendar(1, shopId);
         return "shop";
@@ -78,13 +78,14 @@ public class ShopController {
     @GetMapping("/shops/{shopId}/exit")
     public String exitShop(@PathVariable long shopId, Model model, @AuthenticationPrincipal User user) {
         userService.endCurrentWorkDate(user.getId());
+        commentService.archiveComments(shopId);
         return "redirect:/shops";
     }
 
     @PostMapping("/shops/{shopId}/comments")
     public String shop(@PathVariable long shopId, @ModelAttribute CommentDto commentDto, Model model) {
         commentDto.setDate(LocalDateTime.now());
-        shopService.addComment(shopId, commentDto);
+        commentService.addComment(shopId, commentDto);
         model.addAttribute("shop", shopService.getShopById(shopId)
                 .orElseThrow(ShopNotFoundException::new));
         model.addAttribute("availableProducts", productService.getAllAvailableProductsDetails());
@@ -94,17 +95,17 @@ public class ShopController {
 
     @ResponseBody
     @GetMapping("/shops/{shopId}/comments")
-    public List<CommentDto> comments(@PathVariable long shopId) {
-        return shopService.getComments(shopId);
+    public List<CommentDto> comments(@PathVariable long shopId, @RequestParam boolean archived) {
+        return commentService.getComments(shopId, archived);
     }
 
     @ResponseBody
-    @GetMapping(value = "/shops/{shopId}/comments/{commentId}")
-    public ResponseEntity<Resource> generatePdf(@PathVariable long shopId, @PathVariable long commentId) throws DocumentException, IOException, URISyntaxException {
-        var comment = shopService.getComment(commentId);
-        var pdfFile = shopService.generatePdfFromComment(comment);
+    @GetMapping(value = "/shops/{shopId}/comments/pdf")
+    public ResponseEntity<Resource> generatePdf(@PathVariable long shopId) throws DocumentException, IOException, URISyntaxException {
+        var comments = commentService.getComments(shopId, true);
+        var pdfFile = commentService.generatePdfFromComments(comments);
         HttpHeaders header = new HttpHeaders();
-        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=komentarz-" + comment.getDate() + ".pdf");
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=komentarze-%s.pdf".formatted(LocalDate.now()));
         header.add("Cache-Control", "no-cache, no-store, must-revalidate");
         header.add("Pragma", "no-cache");
         header.add("Expires", "0");

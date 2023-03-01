@@ -32,19 +32,19 @@ public class ShopStore {
         this.count = 0;
     }
 
-    public boolean isAvailable() {
-        return getCount() > 0;
+    public boolean isAvailable(int count) {
+        return getCount() >= count;
     }
 
-    public void removeProduct() {
-        if (isAvailable()) {
-            this.count--;
-            product.addProduct();
+    public void removeProduct(int count) {
+        if (isAvailable(count)) {
+            this.count -= count;
+            product.addProduct(count);
         } else throw new ProductNotAvailableException();
     }
 
-    public void addProduct() {
-        this.count++;
-        product.removeProduct();
+    public void addProduct(int count) {
+        this.count += count;
+        product.removeProduct(count);
     }
 }

@@ -18,17 +18,17 @@ public class Product {
     private String name;
     private int count;
 
-    public void addProduct() {
-        this.count++;
+    public void addProduct(int count) {
+        this.count += count;
     }
 
-    public void removeProduct() {
-        if (isAvailable())
-            this.count--;
+    public void removeProduct(int count) {
+        if (isAvailable(count))
+            this.count -= count;
         else throw new ProductNotAvailableException();
     }
 
-    public boolean isAvailable() {
-        return getCount() > 0;
+    public boolean isAvailable(int count) {
+        return getCount() >= count;
     }
 }

@@ -18,6 +18,7 @@ import com.wanca.aplikacja.util.PdfUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -36,16 +37,8 @@ public class ShopServiceImpl implements ShopService {
     private final ShopRepository shopRepository;
     private final ProductService productService;
 
-    private final CommentRepository commentRepository;
-
-    public Collection<ShopDto> getShopsByCity(String city) {
-        return shopRepository.findByAddress_City(city).stream().map(s -> {
-            var products = productService.getShopProducts(s.getId());
-            return DtoConverter.convertShop(s, products);
-        }).toList();
-    }
-
     @Override
+    @Transactional(readOnly = true)
     public Optional<ShopDto> getShopById(long id) {
         return shopRepository.findById(id).map(s -> {
             var products = productService.getShopProducts(s.getId());
@@ -54,6 +47,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Collection<ShopDto> getShops() {
         return shopRepository.findAll()
                 .stream()
@@ -65,18 +59,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public void addComment(long shopId, CommentDto commentDto) {
-        Comment comment = new Comment();
-        comment.setDate(commentDto.getDate());
-        comment.setText(commentDto.getText());
-        var shop = shopRepository.findById(shopId)
-                .orElseThrow(ShopNotFoundException::new);
-        commentRepository.save(comment);
-        shop.getComments().add(comment);
-        shopRepository.save(shop);
-    }
-
-    @Override
+    @Transactional
     public void createShop(SimpleShopDto simpleShopDto) {
         Shop shop = new Shop();
         shop.setName(simpleShopDto.getName());
@@ -86,24 +69,5 @@ public class ShopServiceImpl implements ShopService {
         address.setPostalCode(simpleShopDto.getAddress().getPostalCode());
         shop.setAddress(address);
         shopRepository.save(shop);
-    }
-
-    @Override
-    public List<CommentDto> getComments(long shopId) {
-        return commentRepository.findShopComments(shopId)
-                .stream()
-                .map(DtoConverter::convertComment)
-                .toList();
-    }
-
-    @Override
-    public Comment getComment(long commentId){
-        return commentRepository.findCommentById(commentId)
-                .orElseThrow(RuntimeException::new);
-    }
-
-    @Override
-    public ByteArrayResource generatePdfFromComment(Comment comment) throws IOException, DocumentException, URISyntaxException {
-        return PdfUtils.generatePdfFromComment(comment);
     }
 }
