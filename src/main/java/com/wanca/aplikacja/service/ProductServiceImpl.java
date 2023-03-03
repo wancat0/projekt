@@ -29,7 +29,7 @@ public class ProductServiceImpl implements ProductService {
     public Collection<ProductDto> getAllAvailableProductsDetails() {
         return productRepository.findAll()
                 .stream()
-                .map(p -> new ProductDto(p.getId(), p.getName(), p.getCount()))
+                .map(p -> new ProductDto(p.getId(), p.getName(), p.getCount(), p.getSerialNumber()))
                 .toList();
     }
 
@@ -38,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
     public Collection<ProductDto> getShopProducts(long shopId) {
         return shopStoreRepository.findByShop_Id(shopId)
                 .stream()
-                .map(s -> new ProductDto(s.getProduct().getId(), s.getProduct().getName(), s.getCount()))
+                .map(s -> new ProductDto(s.getProduct().getId(), s.getProduct().getName(), s.getCount(), s.getProduct().getSerialNumber()))
                 .toList();
     }
 
@@ -88,6 +88,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = new Product();
         product.setName(productDto.getName());
         product.setCount(productDto.getCount());
+        product.setSerialNumber(productDto.getSerialNumber());
         productRepository.save(product);
     }
 
@@ -108,5 +109,11 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void update(Product product) {
         productRepository.save(product);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean exists(ProductDto productDto) {
+        return productRepository.existsProductByNameAndSerialNumber(productDto.getName(), productDto.getSerialNumber());
     }
 }

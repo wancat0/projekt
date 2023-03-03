@@ -22,4 +22,6 @@ public interface ProductService {
     Product findOne(long id);
 
     void update(Product product);
+
+    boolean exists(ProductDto productDto);
 }

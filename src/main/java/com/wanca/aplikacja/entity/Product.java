@@ -17,6 +17,7 @@ public class Product {
     private Long id;
     private String name;
     private int count;
+    private String serialNumber;
 
     public void addProduct(int count) {
         this.count += count;

@@ -1,138 +1,32 @@
 <!DOCTYPE html SYSTEM "about:legacy-compat">
 <html lang="pl" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
-<div th:fragment="navbar(isWorkStarted)" th:remove="tag">
+<div th:fragment="navbar" th:remove="tag">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="/">Praca</a>
-            <button aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation"
-                    class="navbar-toggler"
-                    data-target="#navbarText" data-toggle="collapse" type="button">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarText">
-                <ul class="navbar-nav mr-auto">
-                    <li>
-                        <button class="btn btn-primary" data-target="#calendarModal" data-toggle="modal"
-                                id="button-hours"
-                                type="button">
-                            Przepracowane godziny
-                        </button>
-                        <!-- Modal -->
-                        <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade"
-                             id="calendarModal"
-                             role="dialog" tabindex="-1" th:with="calendar=${calendar}">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Przepracowane godziny</h5>
-                                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body pre-scrollable" id="modal-body" style="max-height: 500px">
-                                        <table class="table">
-                                            <thead>
-                                            <tr>
-                                                <th scope="col">Sklep</th>
-                                                <th scope="col">Początek</th>
-                                                <th scope="col">Koniec</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr th:each="row, stat : ${calendar}">
-                                                <td th:text="${row.name}">John</td>
-                                                <td th:text="${#temporals.format(row.startDate, 'dd-MM-yyyy hh:mm')}">John</td>
-                                                <td th:text="${#temporals.format(row.endDate, 'dd-MM-yyyy hh:mm')}">John</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-secondary" data-dismiss="modal" type="button">
-                                            Zamknij
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+            <div>
+                <th:block th:if="${#httpServletRequest.requestURI == '/shops'}">
+                    <a class="navbar-brand" href="/">Strona główna</a>
+                </th:block>
+                <th:block th:if="${#strings.contains(#httpServletRequest.requestURI, '/shops/')}">
+                    <a class="navbar-brand" href="/shops">Cofnij</a>
+                </th:block>
+                <th:block th:if="${#strings.contains(#httpServletRequest.requestURI, '/warehouse')}">
+                    <a class="navbar-brand" href="/">Strona główna</a>
+                </th:block>
+                <th:block th:if="${#httpServletRequest.requestURI == '/'}">
+                    <a class="navbar-brand" href="/">Strona główna</a>
+                </th:block>
+            </div>
+            <div>
                 <span class="navbar-text" th:text="${name + ' ' + surname}">A A</span>
+                <span class="navbar-text pl-2">
+                    <a th:href="@{/logout}">
+                        <span class="material-symbols-sharp" style="font-size: 16px">logout</span>
+                    </a>
+                </span>
             </div>
         </div>
     </nav>
-    <script>
-        function fillUserData(data) {
-            var html = '<table class="table table-striped">';
-            html += '<tr>';
-            var flag = 0;
-            $.each(data[0], function (index, value) {
-                html += '<th>' + index + '</th>';
-            });
-            html += '</tr>';
-            $.each(data, function (index, value) {
-                html += '<tr>';
-                $.each(value, function (index2, value2) {
-                    var notNullValue = value2 == null ? ' ' : value2
-                    html += '<td>' + notNullValue + '</td>';
-                });
-                html += '<tr>';
-            });
-            html += '</table>';
-            $('#modal-body').html(html);
-        }
-
-        $('#button-hours').click(function () {
-            fetch('http://localhost:8080/user/calendar')
-                .then(response => response.json())
-                //.then(data => fillUserData(data));
-        });
-
-
-        $(document).ready(function () {
-            setInterval('updateClock()', 1000);
-        });
-
-        function start() {
-            fetch('http://localhost:8080/user/work-start')
-            $('#start').hide();
-            $('#stop').show();
-            $("#clock").html(secondsToHms(0));
-            $('#clock-container').show();
-        }
-
-        function stop() {
-            fetch('http://localhost:8080/user/work-end')
-            $('#stop').hide();
-            $('#start').show();
-            $('#clock-container').hide();
-        }
-
-        function calculateTime(date) {
-            var currentTime = new Date()
-            var currentTimeString = currentTime.getTime() - date.getTime();
-            $("#clock").html(secondsToHms(Math.round(currentTimeString / (1000))));
-        }
-
-        function updateClock() {
-            if ($('#clock').is(":visible")) {
-                fetch('http://localhost:8080/user/work-start-date')
-                    .then(response => response.json())
-                    .then(data => calculateTime(new Date(data)));
-            }
-        }
-
-        function secondsToHms(d) {
-            d = Number(d);
-            let h = Math.floor(d / 3600);
-            let m = Math.floor(d % 3600 / 60);
-            let s = Math.floor(d % 3600 % 60);
-
-            let hDisplay = h + " - ";
-            let mDisplay = m + " - ";
-            return hDisplay + mDisplay + s;
-        }
-    </script>
 </div>
 </html>

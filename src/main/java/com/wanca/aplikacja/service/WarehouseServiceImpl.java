@@ -26,6 +26,13 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     @Transactional
+    public boolean exists(ProductDto productDto){
+        return productService.exists(productDto);
+    }
+
+
+    @Override
+    @Transactional
     public void removeProduct(long id, int count) {
         var product = productService.findOne(id);
         if (product.getCount() > 0) {

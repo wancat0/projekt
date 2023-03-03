@@ -9,5 +9,7 @@ public interface WarehouseService {
 
     void addProduct(ProductDto productDto);
 
+    boolean exists(ProductDto productDto);
+
     void removeProduct(long id, int count);
 }
