@@ -43,7 +43,8 @@
             <td><i class="material-symbols-sharp" style="font-size: 70px; color: #492753">store</i></td>
             <td class="td-center" th:text="${shop.name}">John</td>
             <td class="td-center"
-                th:text="${shop.address.street + ' ' + shop.address.city + ' ' + shop.address.postalCode}">Doe
+                th:text="${'ul. ' + shop.address.street + ', ' + shop.address.city + ', ' + shop.address.postalCode}">
+                adres
             </td>
             <td class="td-center"><a class="btn btn-outline-primary" th:href="${'/shops/' + shop.id}">Wejdź</a></td>
         </tr>
@@ -72,19 +73,19 @@
                         </div>
                         <div class="form-group">
                             <label th:for="address.street">Ulica</label>
-                            <th:input class="form-control" th:field="*{address.street}" th:placeholder="Krakowska 1"
-                                      type="text"/>
+                            <input class="form-control" placeholder="Krakowska 1" th:field="*{address.street}"
+                                   type="text"/>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-8">
                                 <label th:for="address.city">Miejscowość</label>
-                                <th:input class="form-control" th:field="*{address.city}" th:placeholder="Rzeszów"
-                                          type="text"/>
+                                <input class="form-control" placeholder="Rzeszów" th:field="*{address.city}"
+                                       type="text"/>
                             </div>
                             <div class="form-group col-md-4">
                                 <label th:for="address.postalCode">Kod pocztowy</label>
-                                <th:input class="form-control" th:field="*{address.postalCode}" th:placeholder="35-125"
-                                          type="text"/>
+                                <input class="form-control" placeholder="35-125" th:field="*{address.postalCode}"
+                                       type="text"/>
                             </div>
                         </div>
                     </div>
