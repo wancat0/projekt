@@ -9,10 +9,8 @@
     <script src="/js/jquery-3.2.1.slim.min.js"></script>
     <script src="/js/popper.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
-
     <!-- icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@24,300,1,-25"
-          rel="stylesheet"/>
+    <link href="/css/icons/logout.css" rel="stylesheet"/>
 </head>
 <body>
 <div th:replace="'fields' :: navbar"></div>
@@ -80,12 +78,13 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="name">Nazwa Produktu</label>
-                        <input class="form-control" id="name" name="name" placeholder="Taczki..." required type="text">
+                        <input class="form-control" id="name" name="name" placeholder="Nazwa produktu..." required
+                               type="text">
                     </div>
                     <div class="form-group">
                         <label for="serialNumber">Numer seryjny</label>
-                        <input class="form-control" id="serialNumber" maxlength="36" name="serialNumber"
-                               placeholder="Taczki..."
+                        <input class="form-control" id="serialNumber" maxlength="5" name="serialNumber"
+                               placeholder="Numer seryjny produktu..."
                                required type="text">
                     </div>
                     <div class="form-group">

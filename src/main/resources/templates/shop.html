@@ -8,14 +8,9 @@
     <script src="/js/jquery-3.2.1.slim.min.js"></script>
     <script src="/js/popper.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
-
     <!-- icons -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
-
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@24,300,1,-25"
-          rel="stylesheet"/>
-
+    <link href="/css/icons/shop.css" rel="stylesheet"/>
+    <link href="/css/icons/logout.css" rel="stylesheet"/>
 </head>
 <body>
 <div th:replace="'fields' :: navbar"></div>
@@ -51,7 +46,8 @@
                     </div>
                     <div class="row d-md-none">
                     <div class="col-12 mt-3 ml-3">
-                        <button class="btn btn-primary" data-target="#archiveCommentsModal" data-toggle="modal"th:data-row="${archiveComments}"
+                        <button class="btn btn-primary" data-target="#archiveCommentsModal" data-toggle="modal"
+                                th:data-row="${archiveComments}"
                                 type="button">
                             Zobacz archiwum
                         </button>
@@ -249,32 +245,6 @@
         })
     }
 
-    function fillUserData(data) {
-        var html = '<table class="table table-striped">';
-        html += '<tr>';
-        var flag = 0;
-        $.each(data[0], function (index, value) {
-            html += '<th>' + index + '</th>';
-        });
-        html += '</tr>';
-        $.each(data, function (index, value) {
-            html += '<tr>';
-            $.each(value, function (index2, value2) {
-                var notNullValue = value2 == null ? ' ' : value2
-                html += '<td>' + notNullValue + '</td>';
-            });
-            html += '<tr>';
-        });
-        html += '</table>';
-        $('#modal-body').html(html);
-    }
-
-    function openArchive(shopId) {
-        fetch('http://localhost:8080/shops/' + shopId + "/comments?archived=true")
-            .then(response => response.json())
-            .then(data => fillUserData(data));
-    }
-
     $(document).ready(function () {
         $('a[data-toggle="list"]').on('show.bs.tab', function (e) {
             localStorage.setItem('activeTab', $(e.target).attr('href'));
@@ -284,6 +254,5 @@
             $('#list-tab a[href="' + activeTab + '"]').tab('show');
         }
     });
-
 </script>
 </html>
