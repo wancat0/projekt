@@ -14,10 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -50,14 +48,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Comment getComment(long commentId) {
-        return commentRepository.findCommentById(commentId)
-                .orElseThrow(RuntimeException::new);
-    }
-
-    @Override
-    public ByteArrayResource generatePdfFromComments(List<CommentDto> comments) throws IOException, DocumentException, URISyntaxException {
+    public ByteArrayResource generatePdfFromComments(List<CommentDto> comments) throws IOException, DocumentException {
         return PdfUtils.generatePdfFromComment(comments);
     }
 

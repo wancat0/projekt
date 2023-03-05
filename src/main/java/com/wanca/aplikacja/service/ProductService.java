@@ -4,7 +4,6 @@ import com.wanca.aplikacja.dto.ProductDto;
 import com.wanca.aplikacja.entity.Product;
 
 import java.util.Collection;
-import java.util.Map;
 
 public interface ProductService {
     Collection<ProductDto> getAllAvailableProductsDetails();

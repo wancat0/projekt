@@ -1,34 +1,17 @@
 package com.wanca.aplikacja.service;
 
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.wanca.aplikacja.dto.CommentDto;
 import com.wanca.aplikacja.dto.ShopDto;
 import com.wanca.aplikacja.dto.SimpleShopDto;
 import com.wanca.aplikacja.entity.Address;
-import com.wanca.aplikacja.entity.Comment;
 import com.wanca.aplikacja.entity.Shop;
-import com.wanca.aplikacja.exceptions.ShopNotFoundException;
-import com.wanca.aplikacja.repository.CommentRepository;
 import com.wanca.aplikacja.repository.ShopRepository;
 import com.wanca.aplikacja.util.DtoConverter;
-import com.wanca.aplikacja.util.PdfUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor

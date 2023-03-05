@@ -5,8 +5,6 @@ import com.wanca.aplikacja.service.WarehouseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
@@ -18,7 +16,6 @@ import java.util.Map;
 @Controller
 @RequiredArgsConstructor
 public class WarehouseController {
-
     private final WarehouseService warehouseService;
 
     @GetMapping("/warehouse")
@@ -33,7 +30,7 @@ public class WarehouseController {
     }
 
     @PostMapping("/warehouse/products")
-    public RedirectView warehouse(@ModelAttribute ProductDto productDto, Model model, RedirectAttributes redirectAttributes) {
+    public RedirectView warehouse(@ModelAttribute ProductDto productDto, RedirectAttributes redirectAttributes) {
         if (warehouseService.exists(productDto)) {
             redirectAttributes.addFlashAttribute("error", "Produkt %s (%s) istnieje!".formatted(productDto.getName(), productDto.getSerialNumber()));
         } else {

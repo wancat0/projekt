@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Entity
-public class Calendar {
+public class WorkingHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -31,10 +31,10 @@ public class Calendar {
 
     private LocalDateTime endDate;
 
-    public Calendar() {
+    public WorkingHistory() {
     }
 
-    public Calendar(User user, LocalDateTime startDate, Shop shop) {
+    public WorkingHistory(User user, LocalDateTime startDate, Shop shop) {
         this.user = user;
         this.startDate = startDate;
         this.date = startDate.toLocalDate();

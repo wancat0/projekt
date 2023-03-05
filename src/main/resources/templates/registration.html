@@ -1,55 +1,45 @@
-<html>
+<!DOCTYPE html>
+<html lang="pl-PL">
 <head>
+    <title>Rejestracja</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>Please sign in</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-    <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/css/signin.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="container">
-    <form class="form-signin" action="/user/registration" th:object="${user}" method="POST" enctype="utf8">
+    <form action="/user/registration" class="form-signin" method="POST" th:object="${user}">
         <h2 class="form-signin-heading">Zarejestruj</h2>
         <p>
-            <label th:text="Imię" th:for="name">first</label>
-            <input th:field="*{name}" class="form-control" required/>
+            <label for="name" th:text="Imię">first</label>
+            <input class="form-control" id="name" name="name" required/>
         <p th:each="error: ${#fields.errors('name')}"
            th:text="${error}">Validation error</p>
-        </p>
         <p>
-            <label th:text="Nazwisko" th:for="surname">last</label>
-            <input th:field="*{surname}" class="form-control"/>
+            <label for="surname" th:text="Nazwisko">last</label>
+            <input class="form-control" id="surname" name="surname"/>
         <p th:each="error : ${#fields.errors('surname')}"
            th:text="${error}">Validation error</p>
-        </p>
         <p>
-            <label th:text="Email" th:for="email">email</label>
-            <input type="email" th:field="*{email}" class="form-control" required/>
+            <label for="email" th:text="Email">email</label>
+            <input class="form-control" id="email" name="email" required type="email"/>
         <p th:each="error : ${#fields.errors('email')}"
            th:text="${error}">Validation error</p>
-        </p>
         <p>
-            <label th:text="Hasło" th:for="password"> password</label>
-            <input type="password" th:field="*{password}" class="form-control" required/>
+            <label for="password" th:text="Hasło"> password</label>
+            <input class="form-control" id="password" name="password" required type="password"/>
         <p th:each="error : ${#fields.errors('password')}"
            th:text="${error}">Validation error</p>
-        </p>
 
         <div th:if="${#fields.hasErrors('global')}">
             <h3>Global errors:</h3>
-            <p th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error" />
+            <p class="error" th:each="err : ${#fields.errors('global')}" th:text="${err}">Error</p>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" th:text="Zarejestruj">submit</button>
+        <button class="btn btn-lg btn-primary btn-block" th:text="Zarejestruj" type="submit">submit</button>
     </form>
-
-    <div class="form-signin" >
-        <a class="btn btn-lg btn-secondary btn-block" href="/login" th:text="Zaloguj">login</a>
-
+    <div class="form-signin">
+        <a class="btn btn-lg btn-secondary btn-block" th:href="@{/login}" th:text="Zaloguj">login</a>
     </div>
 </div>
 </body>
-
 </html>

@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-public class CalendarDto {
+public class WorkingHistoryDto {
     @JsonProperty("data")
     private final LocalDate date;
     @JsonProperty("początek")

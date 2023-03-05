@@ -25,8 +25,8 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    @Transactional
-    public boolean exists(ProductDto productDto){
+    @Transactional(readOnly = true)
+    public boolean exists(ProductDto productDto) {
         return productService.exists(productDto);
     }
 

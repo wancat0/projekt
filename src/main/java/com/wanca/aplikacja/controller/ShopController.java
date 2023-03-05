@@ -28,7 +28,6 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class ShopController {
-
     private final ShopService shopService;
     private final ProductService productService;
     private final CommentService commentService;
@@ -66,17 +65,17 @@ public class ShopController {
 
 
     @GetMapping("/shops/{shopId}")
-    public String shop(@PathVariable long shopId, Model model) {
+    public String shop(@PathVariable long shopId, Model model, @AuthenticationPrincipal User user) {
         model.addAttribute("shop", shopService.getShopById(shopId)
                 .orElseThrow(ShopNotFoundException::new));
         model.addAttribute("archiveComments", commentService.getComments(shopId, true));
         model.addAttribute("availableProducts", productService.getAllAvailableProductsDetails());
-        userService.createNewCalendar(1, shopId);
+        userService.createWorkingHistory(user.getId(), shopId);
         return "shop";
     }
 
     @GetMapping("/shops/{shopId}/exit")
-    public String exitShop(@PathVariable long shopId, Model model, @AuthenticationPrincipal User user) {
+    public String exitShop(@PathVariable long shopId, @AuthenticationPrincipal User user) {
         userService.endCurrentWorkDate(user.getId());
         commentService.archiveComments(shopId);
         return "redirect:/shops";

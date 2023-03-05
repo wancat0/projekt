@@ -1,11 +1,13 @@
 package com.wanca.aplikacja.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,6 +22,7 @@ public class User {
     private String password;
     private String email;
 
+    @Setter(AccessLevel.PRIVATE)
     @ManyToMany
     @JoinTable(
             name = "users_roles",
@@ -28,5 +31,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
     @ToString.Exclude
-    private Collection<Role> roles;
+    private Set<Role> roles = new HashSet<>();
+
+    public void addRole(Role role) {
+        getRoles().add(role);
+    }
 }

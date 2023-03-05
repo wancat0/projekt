@@ -8,7 +8,6 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.wanca.aplikacja.dto.CommentDto;
-import com.wanca.aplikacja.entity.Comment;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;

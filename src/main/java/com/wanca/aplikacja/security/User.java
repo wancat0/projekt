@@ -1,6 +1,7 @@
 package com.wanca.aplikacja.security;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Setter
 @Getter
+@NoArgsConstructor
 public class User implements UserDetails {
     private String ROLE_PREFIX = "ROLE_";
     private Long id;
@@ -20,9 +22,6 @@ public class User implements UserDetails {
     private String login;
     private String password;
     private String role;
-
-    public User() {
-    }
 
     public User(Long id, String login, String name, String surname, String password, String role) {
         this.id = id;

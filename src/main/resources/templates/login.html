@@ -1,40 +1,28 @@
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-<meta content="" name="description">
-<meta content="" name="author">
-<title>Please sign in</title>
-<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
-      integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet">
-<link crossorigin="anonymous" href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet">
-
-<html>
+<!DOCTYPE html>
+<html lang="pl-PL">
 <head>
+    <title>Logowanie</title>
     <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-    <meta content="" name="description">
-    <meta content="" name="author">
-    <title>Please sign in</title>
-    <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
-          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet">
-    <link crossorigin="anonymous" href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet">
+    <link href="/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/css/signin.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="container">
-    <form class="form-signin" action="login" method='POST' name='f'>
+    <form class="form-signin" method='POST' name='f' th:action="@{login}">
         <h1>Zaloguj</h1>
-
         <p>
-            <label th:text="Login" th:for="username">last</label>
-            <input placeholder="Login" class="form-control" name='username' required type="email"/>
+            <label for="username" th:text="Login">last</label>
+            <input class="form-control" id="username" name="username" placeholder="Login" required type="email"/>
         </p>
         <p>
-            <label th:text="Hasło" th:for="password">last</label>
-            <input placeholder="Hasło" class="form-control" name='password' required type="password"/>
+            <label for="password" th:text="Hasło">last</label>
+            <input class="form-control" id="password" name='password' placeholder="Hasło" required type="password"/>
         </p>
         <button class="btn btn-lg btn-primary btn-block" th:text="Zaloguj" type="submit">submit</button>
     </form>
-    <div class="form-signin" >
-        <a class="btn btn-lg btn-secondary btn-block" href="/user/registration" th:text="Zarejestruj">Zarejestruj</a>
+    <div class="form-signin">
+        <a class="btn btn-lg btn-secondary btn-block" th:href="@{/user/registration}"
+           th:text="Zarejestruj">Zarejestruj</a>
     </div>
 </div>
 </body>
